@@ -2,51 +2,37 @@
 
 class PostController extends Controller
 {
-    /**
-     * @var string the default layout for the views.
-     */
     public $layout = '//layouts/column2';
 
-    /**
-     * @return array action filters
-     */
     public function filters()
     {
         return array(
-            'accessControl', // Access control for CRUD operations
-            'postOnly + delete', // Only allow deletion via POST request
+            'accessControl',
+            'postOnly + delete',
         );
     }
 
-    /**
-     * Specifies access control rules.
-     * @return array Access control rules
-     */
     public function accessRules()
     {
         return array(
-            array('allow', // Allow all users to access 'index' and 'view'
+            array('allow', 
                 'actions' => array('index', 'view'),
                 'users' => array('*'),
             ),
-            array('allow', // Allow authenticated users to access 'create' and 'update'
+            array('allow', 
                 'actions' => array('create', 'update', 'admin'),
                 'users' => array('@'),
             ),
-            array('allow', // Allow 'admin' to delete posts
+            array('allow', 
                 'actions' => array('delete'),
                 'users' => array('admin'),
             ),
-            array('deny', // Deny all other users
+            array('deny', 
                 'users' => array('*'),
             ),
         );
     }
 
-    /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to display
-     */
     public function actionView($id)
     {
         $this->render('view', array(
@@ -54,18 +40,18 @@ class PostController extends Controller
         ));
     }
 
-    /**
-     * Creates a new post model.
-     */
     public function actionCreate()
     {
         $model = new Post;
 
-        // AJAX validation
         $this->performAjaxValidation($model);
 
         if (isset($_POST['Post'])) {
             $model->attributes = $_POST['Post'];
+            $model->author_id = Yii::app()->user->id; // Ensure author is assigned
+            $model->create_time = time();
+            $model->update_time = time();
+
             if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
             }
@@ -76,19 +62,16 @@ class PostController extends Controller
         ));
     }
 
-    /**
-     * Updates a particular model.
-     * @param integer $id the ID of the model to update
-     */
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
 
-        // AJAX validation
         $this->performAjaxValidation($model);
 
         if (isset($_POST['Post'])) {
             $model->attributes = $_POST['Post'];
+            $model->update_time = time();
+
             if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
             }
@@ -99,16 +82,11 @@ class PostController extends Controller
         ));
     }
 
-    /**
-     * Deletes a particular model.
-     * @param integer $id the ID of the model to delete
-     */
     public function actionDelete($id)
     {
         if (Yii::app()->request->isPostRequest) {
             $this->loadModel($id)->delete();
 
-            // Redirect if not an AJAX request
             if (!isset($_GET['ajax'])) {
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
             }
@@ -117,9 +95,6 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Lists all models.
-     */
     public function actionIndex()
     {
         $dataProvider = new CActiveDataProvider('Post');
@@ -128,9 +103,6 @@ class PostController extends Controller
         ));
     }
 
-    /**
-     * Manages all models.
-     */
     public function actionAdmin()
     {
         $model = new Post('search');
@@ -145,12 +117,6 @@ class PostController extends Controller
         ));
     }
 
-    /**
-     * Loads the data model based on the primary key.
-     * @param integer $id the ID of the model
-     * @return Post the loaded model
-     * @throws CHttpException
-     */
     public function loadModel($id)
     {
         $model = Post::model()->findByPk($id);
@@ -160,10 +126,6 @@ class PostController extends Controller
         return $model;
     }
 
-    /**
-     * Performs AJAX validation.
-     * @param Post $model the model to validate
-     */
     protected function performAjaxValidation($model)
     {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'post-form') {
