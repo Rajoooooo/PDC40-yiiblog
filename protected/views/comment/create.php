@@ -2,52 +2,24 @@
 /* @var $this CommentController */
 /* @var $model Comment */
 
-$this->breadcrumbs = array(
-    'Comments' => array('index'),
-    'Create',
-);
-
-$this->menu = array(
-    array('label' => 'List Comment', 'url' => array('index')),
-    array('label' => 'Manage Comment', 'url' => array('admin')),
-);
-
 Yii::app()->clientScript->registerCssFile('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
+Yii::app()->clientScript->registerCssFile('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 ?>
 
-<style>
-    .form-container {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    }
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl mx-auto">
 
-    .form-title {
-        color: #333;
-        font-weight: bold;
-    }
+        <h1 class="text-3xl font-semibold text-center text-gray-800 mb-8">Leave a Comment</h1>
 
-    .form-button {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        transition: all 0.3s;
-    }
-
-    .form-button:hover {
-        background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
-    }
-</style>
-
-<div class="container mx-auto p-6 flex justify-center">
-    <div class="max-w-lg w-full form-container">
-        <h1 class="text-3xl form-title text-center mb-6">Create Comment</h1>
-
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-            <?php $this->renderPartial('_form', array('model' => $model)); ?>
+        <div class="flex justify-center">
+            <div class="w-full max-w-3xl">
+                <?php $this->renderPartial('_form', ['model' => $model]); ?>
+            </div>
         </div>
 
         <div class="mt-6 text-center">
-            <a href="<?php echo Yii::app()->createUrl('comment/index'); ?>" class="form-button text-white px-6 py-2 rounded-full">Back to Comments</a>
+            <a href="<?php echo Yii::app()->createUrl('comment/index'); ?>" class="text-blue-600 hover:underline font-medium">&larr; Back to Comments</a>
         </div>
+
     </div>
 </div>
