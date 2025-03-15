@@ -3,8 +3,7 @@
 class CommentController extends Controller
 {
 	/**
-	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-	 * using two-column layout. See 'protected/views/layouts/column2.php'.
+	 * @var string the default layout for the views.
 	 */
 	public $layout='//layouts/column2';
 
@@ -15,31 +14,26 @@ class CommentController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
+			'postOnly + delete', // allow deletion only via POST request
 		);
 	}
 
 	/**
 	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
 	 * @return array access control rules
 	 */
 	public function accessRules()
 	{
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
+			array('allow', // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+			array('allow', // allow authenticated users to perform 'create', 'update', 'admin', and 'delete' actions
+				'actions'=>array('create','update','admin','delete'),
 				'users'=>array('@'),
 			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
-			array('deny',  // deny all users
+			array('deny', // deny all users
 				'users'=>array('*'),
 			),
 		);
@@ -51,7 +45,7 @@ class CommentController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
+		$this->render('view', array(
 			'model'=>$this->loadModel($id),
 		));
 	}
@@ -74,14 +68,13 @@ class CommentController extends Controller
 				$this->redirect(array('view','id'=>$model->id));
 		}
 
-		$this->render('create',array(
+		$this->render('create', array(
 			'model'=>$model,
 		));
 	}
 
 	/**
 	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
 	public function actionUpdate($id)
@@ -98,21 +91,19 @@ class CommentController extends Controller
 				$this->redirect(array('view','id'=>$model->id));
 		}
 
-		$this->render('update',array(
+		$this->render('update', array(
 			'model'=>$model,
 		));
 	}
 
 	/**
 	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
 	public function actionDelete($id)
 	{
 		$this->loadModel($id)->delete();
 
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
@@ -123,7 +114,7 @@ class CommentController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider=new CActiveDataProvider('Comment');
-		$this->render('index',array(
+		$this->render('index', array(
 			'dataProvider'=>$dataProvider,
 		));
 	}
@@ -138,14 +129,13 @@ class CommentController extends Controller
 		if(isset($_GET['Comment']))
 			$model->attributes=$_GET['Comment'];
 
-		$this->render('admin',array(
+		$this->render('admin', array(
 			'model'=>$model,
 		));
 	}
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
 	 * @return Comment the loaded model
 	 * @throws CHttpException
@@ -154,7 +144,7 @@ class CommentController extends Controller
 	{
 		$model=Comment::model()->findByPk($id);
 		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
+			throw new CHttpException(404, 'The requested page does not exist.');
 		return $model;
 	}
 
