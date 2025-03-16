@@ -40,6 +40,13 @@
                    class="w-full p-3 mb-6 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                    placeholder="Enter tags, separated by commas">
 
+            <!-- Status Field -->
+            <label class="block text-lg font-semibold mb-2" for="status">Status</label>
+            <select id="status" name="Post[status]" class="w-full p-3 mb-6 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+                <option value="1" <?php echo ($model->status == 1) ? 'selected' : ''; ?>>Published</option>
+                <option value="0" <?php echo ($model->status == 0) ? 'selected' : ''; ?>>Unpublished</option>
+            </select>
+
             <!-- Action Buttons -->
             <div class="flex space-x-4">
                 <button type="submit" name="save" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
