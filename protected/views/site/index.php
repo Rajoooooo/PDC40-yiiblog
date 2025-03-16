@@ -13,7 +13,7 @@ Yii::app()->clientScript->registerCssFile('https://cdn.jsdelivr.net/npm/tailwind
         <?php foreach ($posts as $post): ?>
             <div class="bg-white p-6 rounded-lg shadow-lg">
                 <h2 class="text-2xl font-semibold">
-                    <?php echo CHtml::link(CHtml::encode($post->title), array('comment/create', 'id' => $post->id)); ?>
+                    <?php echo CHtml::link(CHtml::encode($post->title), array('post/view', 'id' => $post->id)); ?>
                 </h2>
                 <p class="text-gray-600">Published on: <?php echo date('F d, Y', $post->create_time); ?></p>
                 <p class="mt-4"> <?php echo nl2br(CHtml::encode($post->content)); ?> </p>
