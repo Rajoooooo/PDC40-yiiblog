@@ -2,9 +2,12 @@
 
 class Post extends CActiveRecord
 {
+    const STATUS_UNPUBLISHED = 2;
+    const STATUS_PUBLISHED = 1;
+
     public function tableName()
     {
-        return '{{post}}';
+        return '{{post}}';  // Table name in your database
     }
 
     public function rules()

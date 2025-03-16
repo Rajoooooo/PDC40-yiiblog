@@ -15,35 +15,42 @@ class PostController extends Controller
     public function accessRules()
     {
         return array(
-            array('allow', 
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
-            array('allow', 
-                'actions' => array('create', 'update', 'admin'),
-                'users' => array('@'),
-            ),
-            array('allow', 
-                'actions' => array('delete'),
-                'users' => array('admin'),
-            ),
-            array('deny', 
-                'users' => array('*'),
-            ),
+            array('allow', 'actions' => array('index', 'view'), 'users' => array('*')),
+            array('allow', 'actions' => array('create', 'update', 'admin'), 'users' => array('@')),
+            array('allow', 'actions' => array('delete'), 'users' => array('admin')),
+            array('deny', 'users' => array('*')),
         );
     }
 
+    public function actionIndex()
+    {
+        $criteria = new CDbCriteria();
+        $criteria->condition = 'status = :status'; 
+        $criteria->params = array(':status' => Post::STATUS_PUBLISHED);
+    
+        $pages = new CPagination(Post::model()->count($criteria));
+        $pages->pageSize = 10;
+        $pages->applyLimit($criteria);
+    
+        $posts = Post::model()->findAll($criteria);
+    
+        $this->render('index', array(
+            'posts' => $posts,
+            'pages' => $pages,
+        ));
+    }
+    
+
     public function actionView($id)
-{
-    $model = $this->loadModel($id);  // Post model
-    $comments = Comment::model()->approvedComments($id);  // Get only approved comments
+    {
+        $model = $this->loadModel($id);
+        $comments = Comment::model()->approvedComments($id);
 
-    $this->render('view', array(
-        'model' => $model,
-        'comments' => $comments,
-    ));
-}
-
+        $this->render('view', array(
+            'model' => $model,
+            'comments' => $comments,
+        ));
+    }
 
     public function actionCreate()
     {
@@ -53,7 +60,7 @@ class PostController extends Controller
 
         if (isset($_POST['Post'])) {
             $model->attributes = $_POST['Post'];
-            $model->author_id = Yii::app()->user->id; // Ensure author is assigned
+            $model->author_id = Yii::app()->user->id;
             $model->create_time = time();
             $model->update_time = time();
 
@@ -98,14 +105,6 @@ class PostController extends Controller
         } else {
             throw new CHttpException(400, 'Invalid request.');
         }
-    }
-
-    public function actionIndex()
-    {
-        $dataProvider = new CActiveDataProvider('Post');
-        $this->render('index', array(
-            'dataProvider' => $dataProvider,
-        ));
     }
 
     public function actionAdmin()
