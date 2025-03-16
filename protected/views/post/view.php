@@ -50,29 +50,23 @@
             </div>
         <?php endif; ?>
 
-        <!-- Action Buttons -->
-        <!-- <div class="flex space-x-4 mt-6">
-            
-           <a href="<?php echo Yii::app()->createUrl('post/create'); ?>" 
-               class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Create New Post</a>
+        <!-- Comment Section -->
+        <div class="mt-12">
+            <h2 class="text-2xl font-bold mb-4">Comments</h2>
+            <?php if (!empty($comments)): ?>
+                <div class="space-y-4">
+                    <?php foreach ($comments as $comment): ?>
+                        <div class="flex items-center mb-4 p-4 bg-gray-100 rounded-lg">
+                            <p class="font-semibold mr-2"><?php echo CHtml::encode($comment->author); ?>:</p>
+                            <p><?php echo CHtml::encode($comment->content); ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="text-gray-600">No comments yet.</p>
+            <?php endif; ?>
+        </div>
 
-          
-            <a href="<?php echo Yii::app()->createUrl('post/update', array('id' => $model->id)); ?>" 
-               class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">Update Post</a>
-
-            
-            <form action="<?php echo Yii::app()->createUrl('post/delete'); ?>" 
-                  method="POST" 
-                  onsubmit="return confirm('Are you sure you want to delete this post?');">
-                <input type="hidden" name="id" value="<?php echo $model->id; ?>">
-                <button type="submit" 
-                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Delete Post</button>
-            
-
-            
-            <a href="<?php echo Yii::app()->createUrl('post/admin'); ?>" 
-               class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Manage Posts</a>
-        </div> -->
     </div>
 
 </body>

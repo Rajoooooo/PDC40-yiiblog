@@ -26,7 +26,7 @@ class CommentController extends Controller
 	{
 		return array(
 			array('allow', // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view', 'create'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated users to perform 'create', 'update', 'admin', and 'delete' actions
@@ -44,34 +44,39 @@ class CommentController extends Controller
 	 * @param integer $id the ID of the model to be displayed
 	 */
 	public function actionView($id)
-	{
-		$this->render('view', array(
-			'model'=>$this->loadModel($id),
-		));
-	}
+{
+    $model = $this->loadModel($id);  // Post model
+    $comments = Comment::model()->approvedComments($id);  // Get only approved and pending comments
+
+    $this->render('view', array(
+        'model' => $model,
+        'comments' => $comments,
+    ));
+}
+
 
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate()
-	{
-		$model=new Comment;
+{
+    $model = new Comment;
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+    if (isset($_POST['Comment'])) {
+        $model->attributes = $_POST['Comment'];
+        $model->status = Comment::STATUS_PENDING; // Set new comments as pending
+        $model->create_time = time();
 
-		if(isset($_POST['Comment']))
-		{
-			$model->attributes=$_POST['Comment'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
+        if ($model->save()) {
+            Yii::app()->user->setFlash('success', 'Your comment is pending approval.');
+            $this->redirect(array('post/view', 'id' => $model->post_id));
+        }
+    }
 
-		$this->render('create', array(
-			'model'=>$model,
-		));
-	}
+    $this->render('create', array('model' => $model));
+}
+
 
 	/**
 	 * Updates a particular model.
@@ -80,9 +85,6 @@ class CommentController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['Comment']))
 		{
@@ -132,6 +134,46 @@ class CommentController extends Controller
 		$this->render('admin', array(
 			'model'=>$model,
 		));
+	}
+
+	/**
+	 * Lists pending comments.
+	 */
+	public function actionPending()
+	{
+		$model = new Comment('search');
+		$model->status = Comment::STATUS_PENDING;
+
+		$this->render('pending', array('model' => $model));
+	}
+
+	/**
+	 * Approves a comment.
+	 * @param integer $id the ID of the comment to approve
+	 */
+	public function actionApprove($id)
+{
+    $comment = $this->loadModel($id);
+    if ($comment->status == Comment::STATUS_PENDING) {
+        // Set the status to approved and save
+        $comment->status = Comment::STATUS_APPROVED;
+        if ($comment->save()) {
+            Yii::app()->user->setFlash('success', 'Comment approved.');
+        }
+    }
+    $this->redirect(array('post/view', 'id' => $comment->post_id)); // Redirect back to the post view
+}
+
+
+	/**
+	 * Rejects (deletes) a comment.
+	 * @param integer $id the ID of the comment to reject
+	 */
+	public function actionReject($id)
+	{
+		$this->loadModel($id)->delete();
+		Yii::app()->user->setFlash('warning', 'Comment rejected and deleted.');
+		$this->redirect(array('pending'));
 	}
 
 	/**

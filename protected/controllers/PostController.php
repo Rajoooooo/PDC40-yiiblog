@@ -34,11 +34,16 @@ class PostController extends Controller
     }
 
     public function actionView($id)
-    {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
-    }
+{
+    $model = $this->loadModel($id);  // Post model
+    $comments = Comment::model()->approvedComments($id);  // Get only approved comments
+
+    $this->render('view', array(
+        'model' => $model,
+        'comments' => $comments,
+    ));
+}
+
 
     public function actionCreate()
     {
