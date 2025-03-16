@@ -1,62 +1,92 @@
-<?php
-/* @var $this PostController */
-/* @var $model Post */
+<!DOCTYPE html>
+<html lang="en">
 
-$this->breadcrumbs=array(
-	'Posts'=>array('index'),
-	'Manage',
-);
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Posts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-$this->menu=array(
-	array('label'=>'List Post', 'url'=>array('index')),
-	array('label'=>'Create Post', 'url'=>array('create')),
-);
+<body class="bg-gray-100 p-8">
 
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$('#post-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
-?>
+    <div class="max-w-7xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <h1 class="text-4xl font-bold mb-8">Manage Posts</h1>
 
-<h1>Manage Posts</h1>
+        <!-- Navigation Buttons -->
+        <div class="mb-8 space-x-4">
+            <a href="<?php echo Yii::app()->createUrl('post/index'); ?>" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">List Posts</a>
+            <a href="<?php echo Yii::app()->createUrl('post/create'); ?>" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">Create Post</a>
+            <button class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700" onclick="toggleSearch()">Advanced Search</button>
+        </div>
 
-<p>
-You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
+        <!-- Advanced Search (Hidden by Default) -->
+        <div id="search-form" class="hidden mb-8">
+            <?php $this->renderPartial('_search', array('model' => $model)); ?>
+        </div>
 
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
+        <!-- Scrollable Posts Table -->
+        <div class="overflow-x-auto max-h-96 rounded-lg border border-gray-300">
+            <table class="w-full table-auto">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="p-4 text-left">ID</th>
+                        <th class="p-4 text-left">Title</th>
+                        <th class="p-4 text-left">Content</th>
+                        <th class="p-4 text-left">Tags</th>
+                        <th class="p-4 text-left">Status</th>
+                        <th class="p-4 text-left">Created At</th>
+                        <th class="p-4 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($model->search()->getData() as $post) : ?>
+                        <tr class="border-t">
+                            <td class="p-4"><?php echo htmlspecialchars($post->id); ?></td>
+                            <td class="p-4"><?php echo htmlspecialchars($post->title); ?></td>
+                            <td class="p-4 truncate max-w-xs overflow-hidden"><?php echo htmlspecialchars($post->content); ?></td>
+                            <td class="p-4"><?php echo htmlspecialchars($post->tags); ?></td>
+                            <td class="p-4"><?php echo htmlspecialchars($post->status); ?></td>
+                            <td class="p-4"><?php echo htmlspecialchars($post->create_time); ?></td>
+                            <td class="p-4 relative">
+                                <button onclick="toggleDropdown(<?php echo $post->id; ?>)" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">Actions</button>
+                                
+                                <!-- Dropdown Menu -->
+                                <div id="dropdown-<?php echo $post->id; ?>" class="hidden absolute bg-white shadow-lg rounded-lg mt-2 z-10">
+                                    <a href="<?php echo Yii::app()->createUrl('post/view', array('id' => $post->id)); ?>" class="block px-4 py-2 hover:bg-gray-100">View</a>
+                                    <a href="<?php echo Yii::app()->createUrl('post/update', array('id' => $post->id)); ?>" class="block px-4 py-2 hover:bg-gray-100">Update</a>
+                                    <a href="<?php echo Yii::app()->createUrl('post/delete', array('id' => $post->id)); ?>" class="block px-4 py-2 hover:bg-gray-100" onclick="return confirm('Are you sure you want to delete this post?');">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'post-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
-	'columns'=>array(
-		'id',
-		'title',
-		'content',
-		'tags',
-		'status',
-		'create_time',
-		/*
-		'update_time',
-		'author_id',
-		*/
-		array(
-			'class'=>'CButtonColumn',
-		),
-	),
-)); ?>
+    </div>
+
+    <script>
+        // Toggle Search Form
+        function toggleSearch() {
+            const searchForm = document.getElementById('search-form');
+            searchForm.classList.toggle('hidden');
+        }
+
+        // Toggle Dropdown Menu
+        function toggleDropdown(id) {
+            document.querySelectorAll('[id^=dropdown-]').forEach(menu => menu.classList.add('hidden'));
+            document.getElementById(`dropdown-${id}`).classList.toggle('hidden');
+        }
+
+        // Hide dropdown on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('[onclick^=toggleDropdown]')) {
+                document.querySelectorAll('[id^=dropdown-]').forEach(menu => menu.classList.add('hidden'));
+            }
+        });
+    </script>
+
+</body>
+
+</html>
