@@ -52,22 +52,22 @@
 
         <!-- Action Buttons -->
         <div class="flex space-x-4 mt-6">
-            <!-- Create New Post -->
-            <a href="<?php echo Yii::app()->createUrl('post/create'); ?>" 
+            
+           <!-- <a href="<?php echo Yii::app()->createUrl('post/create'); ?>" 
                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Create New Post</a>
 
-            <!-- Update Post -->
+          
             <a href="<?php echo Yii::app()->createUrl('post/update', array('id' => $model->id)); ?>" 
                class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">Update Post</a>
 
-            <!-- Delete Post -->
+            
             <form action="<?php echo Yii::app()->createUrl('post/delete'); ?>" 
                   method="POST" 
                   onsubmit="return confirm('Are you sure you want to delete this post?');">
                 <input type="hidden" name="id" value="<?php echo $model->id; ?>">
                 <button type="submit" 
                         class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Delete Post</button>
-            </form>
+            </form> -->
 
             <!-- Manage Posts -->
             <a href="<?php echo Yii::app()->createUrl('post/admin'); ?>" 
