@@ -6,11 +6,6 @@ $this->breadcrumbs = array(
     'Posts',
 );
 
-$this->menu = array(
-    array('label' => 'Create Post', 'url' => array('create')),
-    array('label' => 'Manage Post', 'url' => array('admin')),
-);
-
 // Ensure posts are ordered by most recent first
 $dataProvider = new CActiveDataProvider('Post', array(
     'criteria' => array(
@@ -42,10 +37,16 @@ function formatDate($timestamp) {
         <!-- Header -->
         <div class="flex justify-between items-center mb-12">
             <h1 class="text-5xl font-extrabold tracking-tight">Latest Posts</h1>
-            <a href="<?php echo $this->createUrl('create'); ?>"
-               class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
-                + Create Post
-            </a>
+            <div class="space-x-4">
+                <a href="<?php echo $this->createUrl('create'); ?>"
+                   class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+                    + Create Post
+                </a>
+                <a href="<?php echo $this->createUrl('admin'); ?>"
+                   class="bg-green-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-700 transition duration-300">
+                    Manage Posts
+                </a>
+            </div>
         </div>
 
         <!-- Post List -->
