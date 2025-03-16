@@ -51,9 +51,9 @@
         <?php endif; ?>
 
         <!-- Action Buttons -->
-        <div class="flex space-x-4 mt-6">
+        <!-- <div class="flex space-x-4 mt-6">
             
-           <!-- <a href="<?php echo Yii::app()->createUrl('post/create'); ?>" 
+           <a href="<?php echo Yii::app()->createUrl('post/create'); ?>" 
                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Create New Post</a>
 
           
@@ -67,12 +67,12 @@
                 <input type="hidden" name="id" value="<?php echo $model->id; ?>">
                 <button type="submit" 
                         class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Delete Post</button>
-            </form> -->
+            
 
-            <!-- Manage Posts -->
+            
             <a href="<?php echo Yii::app()->createUrl('post/admin'); ?>" 
                class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Manage Posts</a>
-        </div>
+        </div> -->
     </div>
 
 </body>
