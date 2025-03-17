@@ -15,7 +15,7 @@
 
 // Fetch comments from the database in newest-to-oldest order
 $criteria = new CDbCriteria();
-$criteria->order = 'create_time'; // Newest comment first
+$criteria->order = 'create_time DESC'; // Newest comment first
 $comments = Comment::model()->findAll($criteria);
 ?>
 
@@ -57,13 +57,11 @@ $comments = Comment::model()->findAll($criteria);
                             <p class="text-sm text-gray-500 mb-4">Comment on: <?php echo date('Y-m-d', $comment->create_time); ?></p>
                         </a>
 
-                        <!-- Approve Button -->
-                        <?php if ($comment->status == 0) : ?>
-                            <form method="post" action="<?php echo Yii::app()->createUrl('comment/approve', array('id' => $comment->id)); ?>">
-                                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Approve</button>
-                            </form>
-                        <?php else : ?>
-                            <span class="text-green-600 font-medium">Approved</span>
+                        <!-- Status Label -->
+                        <?php if ($comment->status == 1) : ?>
+                            <span class="px-3 py-1 text-sm font-medium text-yellow-600 bg-yellow-100 rounded-lg">Pending</span>
+                        <?php elseif ($comment->status == 2) : ?>
+                            <span class="px-3 py-1 text-sm font-medium text-green-600 bg-green-100 rounded-lg">Approved</span>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>

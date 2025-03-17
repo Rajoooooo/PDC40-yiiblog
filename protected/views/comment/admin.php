@@ -55,7 +55,6 @@ $('.search-form form').submit(function(){
                         <th class="p-4">ID</th>
                         <th class="p-4">Content</th>
                         <th class="p-4">Author</th>
-                        <th class="p-4">Email</th>
                         <th class="p-4">Create Time</th>
                         <th class="p-4">Status</th>
                         <th class="p-4">Actions</th>
@@ -69,7 +68,6 @@ $('.search-form form').submit(function(){
                                 <?php echo CHtml::encode($data->content); ?>
                             </td>
                             <td class="p-4"><?php echo CHtml::encode($data->author); ?></td>
-                            <td class="p-4"><?php echo CHtml::encode($data->email); ?></td>
                             <td class="p-4"><?php echo date('F j, Y', $data->create_time); ?></td>
                             <td class="p-4">
                                 <?php echo CHtml::dropDownList('status', $data->status, array(
@@ -92,7 +90,7 @@ $('.search-form form').submit(function(){
 
     </div>
 
-    <script>
+    <!-- <script>
         function updateStatus(id, status) {
             // Prevent updating if 'Rejected' is selected
             if (status === 'Rejected') {
@@ -108,9 +106,14 @@ $('.search-form form').submit(function(){
                     id: id,
                     status: status
                 })
-            }).then(() => location.reload());
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Status updated successfully');
+            })
+            .catch(error => console.error('Error:', error));
         }
-    </script>
+    </script> -->
 
 </body>
 </html>

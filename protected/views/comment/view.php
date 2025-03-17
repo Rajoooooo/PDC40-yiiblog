@@ -51,7 +51,7 @@ $manageUrl = Yii::app()->createUrl('comment/admin');
 
                 <div>
                     <h2 class="text-xl font-semibold text-gray-700">Status:</h2>
-                    <p class="text-gray-600 mt-2"><?php echo ($model->status == 1) ? 'Approved' : 'Pending'; ?></p>
+                    <p class="text-gray-600 mt-2"><?php echo ($model->status == 1) ? 'Pending' : 'Approved'; ?></p>
                 </div>
 
                 <div>

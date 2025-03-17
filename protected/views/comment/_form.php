@@ -36,9 +36,12 @@ Yii::app()->clientScript->registerCssFile('https://fonts.googleapis.com/css2?fam
 
                     <div>
                         <?php echo $form->labelEx($model, 'status', array('class' => 'block text-gray-700 font-semibold mb-2')); ?>
-                        <?php echo $form->textField($model, 'status', array(
-                            'placeholder' => 'Status',
+                        <?php echo $form->dropDownList($model, 'status', array(
+                            Comment::STATUS_PENDING => 'Pending',
+                            Comment::STATUS_APPROVED => 'Approved',
+                        ), array(
                             'class' => 'w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all',
+                            'prompt' => 'Select Status',
                         )); ?>
                         <?php echo $form->error($model, 'status', array('class' => 'text-red-500 text-sm mt-2')); ?>
                     </div>
