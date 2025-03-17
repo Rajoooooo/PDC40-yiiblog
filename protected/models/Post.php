@@ -2,8 +2,9 @@
 
 class Post extends CActiveRecord
 {
-    const STATUS_UNPUBLISHED = 2;
-    const STATUS_PUBLISHED = 1;
+    const STATUS_UNPUBLISHED = 1;
+    const STATUS_PUBLISHED = 2;
+    const STATUS_ARCHIVED = 3;
 
     public function tableName()
     {
@@ -52,23 +53,33 @@ class Post extends CActiveRecord
         );
     }
 
+    // Used for the admin panel (shows all posts including archived)
     public function search()
     {
         $criteria = new CDbCriteria;
-
-        $criteria->compare('id', $this->id);
-        $criteria->compare('title', $this->title, true);
-        $criteria->compare('content', $this->content, true);
-        $criteria->compare('tags', $this->tags, true);
-        $criteria->compare('status', $this->status);
-        $criteria->compare('create_time', $this->create_time);
-        $criteria->compare('update_time', $this->update_time);
-        $criteria->compare('author_id', $this->author_id);
+        $criteria->order = 'create_time DESC'; // Show newest posts first
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
     }
+
+    // Used for the index page (excludes archived posts)
+    public function searchForIndex()
+    {
+        $criteria = new CDbCriteria();
+        $criteria->condition = 'status != :archived'; // Exclude archived posts
+        $criteria->params = array(':archived' => self::STATUS_ARCHIVED);
+        $criteria->order = 'create_time DESC';
+    
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
+    }
+    
 
     public static function model($className = __CLASS__)
     {

@@ -23,23 +23,15 @@ class PostController extends Controller
     }
 
     public function actionIndex()
-    {
-        $criteria = new CDbCriteria();
-        $criteria->condition = 'status = :status'; 
-        $criteria->params = array(':status' => Post::STATUS_PUBLISHED);
-    
-        $pages = new CPagination(Post::model()->count($criteria));
-        $pages->pageSize = 10;
-        $pages->applyLimit($criteria);
-    
-        $posts = Post::model()->findAll($criteria);
-    
-        $this->render('index', array(
-            'posts' => $posts,
-            'pages' => $pages,
-        ));
-    }
-    
+{
+    $dataProvider = Post::model()->searchForIndex(); // Use searchForIndex() to exclude archived posts
+
+    $this->render('index', array(
+        'dataProvider' => $dataProvider,
+    ));
+}
+
+
 
     public function actionView($id)
     {

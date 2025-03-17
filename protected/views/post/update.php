@@ -43,8 +43,9 @@
             <!-- Status Field -->
             <label class="block text-lg font-semibold mb-2" for="status">Status</label>
             <select id="status" name="Post[status]" class="w-full p-3 mb-6 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
-                <option value="1" <?php echo ($model->status == 1) ? 'selected' : ''; ?>>Published</option>
-                <option value="0" <?php echo ($model->status == 0) ? 'selected' : ''; ?>>Unpublished</option>
+                <option value="1" <?php echo ($model->status == 1) ? 'selected' : ''; ?>>Unpublished</option>
+                <option value="2" <?php echo ($model->status == 2) ? 'selected' : ''; ?>>Published</option>
+                <option value="3" <?php echo ($model->status == 3) ? 'selected' : ''; ?>>Archived</option>
             </select>
 
             <!-- Action Buttons -->

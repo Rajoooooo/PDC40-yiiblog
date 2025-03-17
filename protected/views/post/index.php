@@ -2,19 +2,7 @@
 /* @var $this PostController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->breadcrumbs = array(
-    'Posts',
-);
-
-// Ensure posts are ordered by most recent first
-$dataProvider = new CActiveDataProvider('Post', array(
-    'criteria' => array(
-        'order' => 'create_time DESC',
-    ),
-    'pagination' => array(
-        'pageSize' => 10,
-    ),
-));
+$this->breadcrumbs = array('Posts');
 
 function formatDate($timestamp) {
     return date('F d, Y', $timestamp); // e.g., September 26, 2024

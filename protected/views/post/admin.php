@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,7 +26,6 @@
             <?php $this->renderPartial('_search', array('model' => $model)); ?>
         </div>
 
-        <!-- Scrollable Posts Table -->
         <div class="overflow-x-auto max-h-96 rounded-lg border border-gray-300">
             <table class="w-full table-auto">
                 <thead class="bg-gray-200">
@@ -47,7 +47,7 @@
                             <td class="p-4 truncate max-w-xs overflow-hidden"><?php echo htmlspecialchars($post->content); ?></td>
                             <td class="p-4"><?php echo htmlspecialchars($post->tags); ?></td>
                             <td class="p-4"><?php echo htmlspecialchars($post->status); ?></td>
-                            <td class="p-4"><?php echo htmlspecialchars($post->create_time); ?></td>
+                            <td class="p-4"><?php echo date('F d, Y', $post->create_time); ?></td>
                             <td class="p-4 relative">
                                 <button onclick="toggleDropdown(<?php echo $post->id; ?>)" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">Actions</button>
                                 
@@ -63,7 +63,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 
     <script>
@@ -88,5 +87,4 @@
     </script>
 
 </body>
-
 </html>
