@@ -2,48 +2,57 @@
 
 class PostController extends Controller
 {
+    // Set layout to 'column2.php' in the 'layouts' folder
     public $layout = '//layouts/column2';
 
+    // Define filters for access control and deletion
     public function filters()
     {
         return array(
-            'accessControl',
-            'postOnly + delete',
+            'accessControl', // Controls access permissions
+            'postOnly + delete', // Allows deletion only via POST
         );
     }
 
+    // Define access rules for different user roles
     public function accessRules()
     {
         return array(
+            // Allow all users to view posts
             array('allow', 'actions' => array('index', 'view'), 'users' => array('*')),
+
+            // Allow authenticated users to create, update, and manage posts
             array('allow', 'actions' => array('create', 'update', 'admin'), 'users' => array('@')),
+
+            // Allow only 'admin' user to delete posts
             array('allow', 'actions' => array('delete'), 'users' => array('admin')),
+
+            // Deny all other users
             array('deny', 'users' => array('*')),
         );
     }
 
+    // Display the list of posts (excluding archived ones)
     public function actionIndex()
-{
-    $dataProvider = Post::model()->searchForIndex(); // Use searchForIndex() to exclude archived posts
+    {
+        $dataProvider = Post::model()->searchForIndex(); // Custom search method for active posts
+        $this->render('index', array(
+            'dataProvider' => $dataProvider,
+        ));
+    }
 
-    $this->render('index', array(
-        'dataProvider' => $dataProvider,
-    ));
-}
-
-
-
+    // Display a single post and its approved comments
     public function actionView($id)
     {
         $model = $this->loadModel($id);
         $comments = Comment::model()->approvedComments($id);
-
         $this->render('view', array(
             'model' => $model,
             'comments' => $comments,
         ));
     }
 
+    // Create a new post
     public function actionCreate()
     {
         $model = new Post;
@@ -66,10 +75,10 @@ class PostController extends Controller
         ));
     }
 
+    // Update an existing post
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
-
         $this->performAjaxValidation($model);
 
         if (isset($_POST['Post'])) {
@@ -86,11 +95,13 @@ class PostController extends Controller
         ));
     }
 
+    // Delete a post
     public function actionDelete($id)
     {
         if (Yii::app()->request->isPostRequest) {
             $this->loadModel($id)->delete();
 
+            // Redirect if not an AJAX request
             if (!isset($_GET['ajax'])) {
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
             }
@@ -99,6 +110,7 @@ class PostController extends Controller
         }
     }
 
+    // Manage posts (Admin view)
     public function actionAdmin()
     {
         $model = new Post('search');
@@ -113,6 +125,7 @@ class PostController extends Controller
         ));
     }
 
+    // Load a specific post model by ID
     public function loadModel($id)
     {
         $model = Post::model()->findByPk($id);
@@ -122,6 +135,7 @@ class PostController extends Controller
         return $model;
     }
 
+    // Validate the post model via AJAX
     protected function performAjaxValidation($model)
     {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'post-form') {
