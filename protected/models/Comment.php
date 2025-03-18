@@ -21,7 +21,6 @@ class Comment extends CActiveRecord
     // Comment Status Constants
     const STATUS_PENDING = 1;
     const STATUS_APPROVED = 2;
-    // const STATUS_REJECTED = 2;
 
     public static function model($className = __CLASS__)
     {
@@ -82,14 +81,26 @@ class Comment extends CActiveRecord
         ));
     }
 
-	public function approvedComments($postId)
-	{
-		// Fetch only approved comments for the post
-		return $this->findAllByAttributes(
-			array('post_id' => $postId, 'status' => self::STATUS_APPROVED),
-			array('order' => 'create_time DESC')
-		);
-	}
-	
+    /**
+     * Finds recent approved comments.
+     * @param int $limit Number of comments to fetch
+     * @return Comment[] List of recent comments
+     */
+    public function findRecentComments($limit = 3)
+{
+    return $this->with('post')->findAll(array(
+        'order' => 't.create_time DESC',
+        'limit' => $limit,
+    ));
+}
 
+
+    public function approvedComments($postId)
+    {
+        // Fetch only approved comments for the post
+        return $this->findAllByAttributes(
+            array('post_id' => $postId, 'status' => self::STATUS_APPROVED),
+            array('order' => 'create_time DESC')
+        );
+    }
 }
