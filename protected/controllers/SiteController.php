@@ -2,107 +2,112 @@
 
 class SiteController extends Controller
 {
-	/**
-	 * Declares class-based actions.
-	 */
-	public function actions()
-	{
-		return array(
-			'captcha' => array(
-				'class' => 'CCaptchaAction',
-				'backColor' => 0xFFFFFF,
-			),
-			'page' => array(
-				'class' => 'CViewAction',
-			),
-		);
-	}
+    /**
+     * Declares class-based actions.
+     */
+    public function actions()
+    {
+        return array(
+            'captcha' => array(
+                'class' => 'CCaptchaAction',
+                'backColor' => 0xFFFFFF,
+            ),
+            'page' => array(
+                'class' => 'CViewAction',
+            ),
+        );
+    }
 
-	/**
-	 * This is the default 'index' action that is invoked
-	 * when an action is not explicitly requested by users.
-	 */
-	public function actionIndex()
-	{
-		$criteria = new CDbCriteria();
-		$criteria->order = 'create_time DESC';
-		$count = Post::model()->count();
-		
-		$pages = new CPagination($count);
-		$pages->pageSize = 10;
-		$pages->applyLimit($criteria);
+    /**
+     * This is the default 'index' action.
+     */
+    public function actionIndex()
+    {
+        $criteria = new CDbCriteria();
+        $criteria->order = 'create_time DESC';
+        $count = Post::model()->count();
 
-		$posts = Post::model()->findAll($criteria);
+        $pages = new CPagination($count);
+        $pages->pageSize = 10;
+        $pages->applyLimit($criteria);
 
-		$this->render('index', array(
-			'posts' => $posts,
-			'pages' => $pages,
-		));
-	}
+        $posts = Post::model()->findAll($criteria);
 
-	/**
-	 * This is the action to handle external exceptions.
-	 */
-	public function actionError()
-	{
-		if ($error = Yii::app()->errorHandler->error) {
-			if (Yii::app()->request->isAjaxRequest)
-				echo $error['message'];
-			else
-				$this->render('error', $error);
-		}
-	}
+        $this->render('index', array(
+            'posts' => $posts,
+            'pages' => $pages,
+        ));
+    }
 
-	/**
-	 * Displays the contact page
-	 */
-	public function actionContact()
-	{
-		$model = new ContactForm;
-		if (isset($_POST['ContactForm'])) {
-			$model->attributes = $_POST['ContactForm'];
-			if ($model->validate()) {
-				$name = '=?UTF-8?B?' . base64_encode($model->name) . '?=';
-				$subject = '=?UTF-8?B?' . base64_encode($model->subject) . '?=';
-				$headers = "From: $name <{$model->email}>\r\n" .
-					"Reply-To: {$model->email}\r\n" .
-					"MIME-Version: 1.0\r\n" .
-					"Content-Type: text/plain; charset=UTF-8";
+    /**
+     * Handles external exceptions.
+     */
+    public function actionError()
+    {
+        if ($error = Yii::app()->errorHandler->error) {
+            if (Yii::app()->request->isAjaxRequest)
+                echo $error['message'];
+            else
+                $this->render('error', $error);
+        }
+    }
 
-				mail(Yii::app()->params['adminEmail'], $subject, $model->body, $headers);
-				Yii::app()->user->setFlash('contact', 'Thank you for contacting us. We will respond to you as soon as possible.');
-				$this->refresh();
-			}
-		}
-		$this->render('contact', array('model' => $model));
-	}
+    /**
+     * Displays the contact page.
+     */
+    public function actionContact()
+    {
+        $model = new ContactForm();
+        if (isset($_POST['ContactForm'])) {
+            $model->attributes = array_map('trim', $_POST['ContactForm']); // Trim input
 
-	/**
-	 * Displays the login page
-	 */
-	public function actionLogin()
-	{
-		$model = new LoginForm;
+            if ($model->validate()) {
+                $name = '=?UTF-8?B?' . base64_encode($model->name) . '?=';
+                $subject = '=?UTF-8?B?' . base64_encode($model->subject) . '?=';
+                $headers = "From: $name <{$model->email}>\r\n" .
+                    "Reply-To: {$model->email}\r\n" .
+                    "MIME-Version: 1.0\r\n" .
+                    "Content-Type: text/plain; charset=UTF-8";
 
-		if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
+                mail(Yii::app()->params['adminEmail'], $subject, $model->body, $headers);
+                Yii::app()->user->setFlash('contact', 'Thank you for contacting us. We will respond to you as soon as possible.');
+                $this->refresh();
+            }
+        }
+        $this->render('contact', array('model' => $model));
+    }
 
-		if (isset($_POST['LoginForm'])) {
-			$model->attributes = $_POST['LoginForm'];
-			if ($model->validate() && $model->login())
-				$this->redirect(Yii::app()->user->returnUrl);
-		}
-		$this->render('login', array('model' => $model));
-	}
+    /**
+     * Displays the login page.
+     */
+    public function actionLogin()
+    {
+        if (!Yii::app()->user->isGuest) {
+            $redirectUrl = (Yii::app()->user->name === 'admin') ? 'admin/index' : 'post/index';
+            $this->redirect(Yii::app()->createUrl($redirectUrl));
+        }
 
-	/**
-	 * Logs out the current user and redirects to homepage.
-	 */
-	public function actionLogout()
-	{
-		Yii::app()->user->logout();
-		$this->redirect(Yii::app()->homeUrl);
-	}
+        $model = new LoginForm();
+
+        if (isset($_POST['LoginForm']) && is_array($_POST['LoginForm'])) {
+            $model->attributes = array_map('trim', $_POST['LoginForm']); // Fix trim() error
+
+            if ($model->validate() && $model->login()) {
+                // Redirect user after successful login
+                $redirectUrl = (Yii::app()->user->name === 'admin') ? 'admin/index' : 'post/index';
+                $this->redirect(Yii::app()->createUrl($redirectUrl));
+            }
+        }
+
+        $this->render('login', array('model' => $model));
+    }
+
+    /**
+     * Logs out the current user and redirects to homepage.
+     */
+    public function actionLogout()
+    {
+        Yii::app()->user->logout();
+        $this->redirect(Yii::app()->homeUrl);
+    }
 }
