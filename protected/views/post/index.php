@@ -25,6 +25,12 @@ function formatDate($timestamp) {
         <!-- Main Content (Posts) -->
         <div class="w-3/8">
             <h1 class="text-5xl font-extrabold tracking-tight mb-12">Latest Posts</h1>
+            
+            <?php
+            if (isset($_GET['tag'])) {
+                echo "<h2>Posts filtered by tag: <strong>" . CHtml::encode($_GET['tag']) . "</strong></h2>";
+            }
+            ?>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <?php foreach ($dataProvider->getData() as $data): ?>

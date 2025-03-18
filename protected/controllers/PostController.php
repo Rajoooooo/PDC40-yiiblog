@@ -32,10 +32,21 @@ class PostController extends Controller
         );
     }
 
-    // Display the list of posts (excluding archived ones)
+    // Display the list of posts (including tag filtering)
     public function actionIndex()
     {
-        $dataProvider = Post::model()->searchForIndex(); // Custom search method for active posts
+        $criteria = new CDbCriteria();
+
+        if (isset($_GET['tag'])) {
+            $tag = $_GET['tag'];
+            $criteria->addSearchCondition('tags', $tag);
+        }
+
+        $dataProvider = new CActiveDataProvider('Post', array(
+            'criteria' => $criteria,
+            'pagination' => array('pageSize' => 10),
+        ));
+
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
@@ -143,4 +154,5 @@ class PostController extends Controller
             Yii::app()->end();
         }
     }
+
 }
