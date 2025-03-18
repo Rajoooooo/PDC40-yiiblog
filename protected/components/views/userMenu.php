@@ -1,18 +1,27 @@
 <?php if (!Yii::app()->user->isGuest): ?>
-    <ul class="space-y-4">
-        <li>
+    <ul class="space-y-2">
+        <li class="p-3 bg-gray-100 rounded-lg shadow-sm">
             <?php echo CHtml::link('Create New Post', array('post/create'), [
-                'class' => 'inline-block text-left bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition',
+                'class' => 'text-blue-600 hover:underline',
             ]); ?>
         </li>
-        <li>
+        <li class="p-3 bg-gray-100 rounded-lg shadow-sm">
             <?php echo CHtml::link('Manage Posts', array('post/admin'), [
-                'class' => 'inline-block text-left bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition',
+                'class' => 'text-blue-600 hover:underline',
             ]); ?>
         </li>
-        <li>
+        <li class="p-3 bg-gray-100 rounded-lg shadow-sm">
+            <?php 
+                // Get the count of approved comments
+                $approvedCount = Comment::model()->count('status=' . Comment::STATUS_APPROVED);
+                echo CHtml::link('Approve Comments', array('comment/index'), [
+                    'class' => 'text-green-600 hover:underline',
+                ]) . ' (' . $approvedCount . ')';
+            ?>
+        </li>
+        <li class="p-3 bg-gray-100 rounded-lg shadow-sm">
             <?php echo CHtml::link('Logout', array('site/logout'), [
-                'class' => 'inline-block text-left bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 transition',
+                'class' => 'text-red-600 hover:underline',
             ]); ?>
         </li>
     </ul>

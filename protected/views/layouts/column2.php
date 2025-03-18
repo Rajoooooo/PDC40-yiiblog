@@ -20,7 +20,10 @@
                 ));
                 $this->endWidget();
 
-                if (!Yii::app()->user->isGuest) $this->widget('UserMenu');
+                // Render the UserMenu widget
+                if (!Yii::app()->user->isGuest) {
+                    $this->widget('UserMenu');
+                }
                 ?>
             </div>
         </div>
