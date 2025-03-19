@@ -4,7 +4,7 @@ Yii::import('zii.widgets.CPortlet');
 
 class RecentComments extends CPortlet
 {
-    public $title = 'Recent Comments';
+    public $title = '';
     public $maxComments = 3;
 
     public function getRecentComments()
