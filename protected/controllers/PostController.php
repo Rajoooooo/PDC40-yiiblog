@@ -54,25 +54,30 @@ class PostController extends Controller
 
     // Display a single post and handle comments
     public function actionView($id)
-    {
-        $post = $this->loadModel($id);
-        $comment = new Comment();
-        $comment->post_id = $post->id; // Automatically assign post_id
+{
+    $post = $this->loadModel($id);
+    $approvedComments = Comment::approvedComments($id); // Fetch only approved comments
 
-        if (isset($_POST['Comment'])) {
-            $comment->attributes = $_POST['Comment'];
-            $comment->post_id = $post->id; // Ensure post_id is assigned again
-            if ($comment->save()) {
-                Yii::app()->user->setFlash('commentSubmitted', 'Thank you for your comment. It will be displayed once approved.');
-                $this->refresh();
-            }
+    $comment = new Comment();
+    $comment->post_id = $post->id; // Assign post_id to comment model
+
+    if (isset($_POST['Comment'])) {
+        $comment->attributes = $_POST['Comment'];
+        $comment->post_id = $post->id;
+
+        if ($comment->save()) {
+            Yii::app()->user->setFlash('commentSubmitted', 'Thank you for your comment. It will be displayed once approved.');
+            $this->refresh();
         }
-
-        $this->render('view', array(
-            'model'   => $post,
-            'comment' => $comment,
-        ));
     }
+
+    $this->render('view', array(
+        'model' => $post,
+        'comment' => $comment,
+        'comments' => $approvedComments, // Pass approved comments to the view
+    ));
+}
+
 
     // Create a new post
     public function actionCreate()

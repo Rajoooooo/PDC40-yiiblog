@@ -35,9 +35,11 @@ class Comment extends CActiveRecord
     public function rules()
     {
         return array(
-            array('content, author, email, post_id', 'required'),
+            array('content, author, email', 'required'),
+            array('post_id', 'safe'), // Allow automatic post_id assignment
             array('status, create_time, post_id', 'numerical', 'integerOnly' => true),
             array('author, email, url', 'length', 'max' => 128),
+            array('email', 'email'), // Ensure valid email format
             array('id, content, status, create_time, author, email, url, post_id', 'safe', 'on' => 'search'),
         );
     }
@@ -52,14 +54,14 @@ class Comment extends CActiveRecord
     public function attributeLabels()
     {
         return array(
-            'id' => 'ID',
-            'content' => 'Comment',
-            'author' => 'Author',
-            'email' => 'Email',
-            'url' => 'URL',
-            'status' => 'Status',
+            'id'          => 'ID',
+            'content'     => 'Comment',
+            'author'      => 'Name',
+            'email'       => 'Email',
+            'url'         => 'URL',
+            'status'      => 'Status',
             'create_time' => 'Created At',
-            'post_id' => 'Post',
+            'post_id'     => 'Post ID',
         );
     }
 
@@ -87,20 +89,43 @@ class Comment extends CActiveRecord
      * @return Comment[] List of recent comments
      */
     public function findRecentComments($limit = 3)
-{
-    return $this->with('post')->findAll(array(
-        'order' => 't.create_time DESC',
-        'limit' => $limit,
-    ));
-}
-
-
-    public function approvedComments($postId)
     {
-        // Fetch only approved comments for the post
-        return $this->findAllByAttributes(
-            array('post_id' => $postId, 'status' => self::STATUS_APPROVED),
-            array('order' => 'create_time DESC')
-        );
+        return $this->with('post')->findAll(array(
+            'order' => 't.create_time DESC',
+            'limit' => $limit,
+        ));
+    }
+
+    /**
+     * Retrieves approved comments for a specific post.
+     * @param int $postId The post ID
+     * @return Comment[] List of approved comments
+     */
+    public static function approvedComments($postId)
+    {
+        $criteria = new CDbCriteria();
+        $criteria->condition = 'post_id = :post_id AND status = :status';
+        $criteria->params = array(':post_id' => $postId, ':status' => self::STATUS_APPROVED);
+        $criteria->order = 'create_time DESC';
+    
+        return self::model()->findAll($criteria);
+    }    
+
+    /**
+     * Adds a comment to the post and sets the approval status.
+     * @param Comment $comment The comment model
+     * @return bool Whether the comment was successfully saved
+     */
+    public function addComment($comment)
+    {
+        if (Yii::app()->params['commentNeedApproval']) {
+            $comment->status = self::STATUS_PENDING;
+        } else {
+            $comment->status = self::STATUS_APPROVED;
+        }
+
+        $comment->post_id = $this->id; // Auto-assign the post_id
+
+        return $comment->save();
     }
 }

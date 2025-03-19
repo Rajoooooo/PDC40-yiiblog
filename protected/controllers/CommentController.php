@@ -45,14 +45,29 @@ class CommentController extends Controller
      */
     public function actionView($id)
     {
-        $model = $this->loadModel($id);
-        $comments = Comment::model()->approvedComments($id);
-
+        $post = $this->loadModel($id);
+        $approvedComments = Comment::approvedComments($id); // Fetch only approved comments
+    
+        $comment = new Comment();
+        $comment->post_id = $post->id; // Ensure post_id is assigned correctly
+    
+        if (isset($_POST['Comment'])) {
+            $comment->attributes = $_POST['Comment'];
+            $comment->post_id = $post->id;
+    
+            if ($comment->save()) {
+                Yii::app()->user->setFlash('commentSubmitted', 'Thank you for your comment. It will be displayed once approved.');
+                $this->refresh();
+            }
+        }
+    
         $this->render('view', array(
-            'model' => $model,
-            'comments' => $comments,
+            'model' => $post,
+            'comment' => $comment,
+            'comments' => $approvedComments, // Pass approved comments to the view
         ));
     }
+    
 
     /**
      * Creates a new comment associated with a post.
