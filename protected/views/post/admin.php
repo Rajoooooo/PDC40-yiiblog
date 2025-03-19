@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,11 +10,11 @@
 
 <body class="bg-gray-100 p-8">
 
-    <div class="max-w-7xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-4xl font-bold mb-8">Manage Posts</h1>
+    <div class="max-w-7xl mx-auto bg-white p-8 rounded-2xl shadow-2xl">
+        <h1 class="text-4xl font-extrabold mb-8">Manage Posts</h1>
 
         <!-- Navigation Buttons -->
-        <div class="mb-8 space-x-4">
+        <div class="mb-8 flex flex-wrap gap-4">
             <a href="<?php echo Yii::app()->createUrl('post/index'); ?>" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">List Posts</a>
             <a href="<?php echo Yii::app()->createUrl('post/create'); ?>" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">Create Post</a>
             <button class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700" onclick="toggleSearch()">Advanced Search</button>
@@ -26,9 +25,10 @@
             <?php $this->renderPartial('_search', array('model' => $model)); ?>
         </div>
 
-        <div class="overflow-x-auto max-h-96 rounded-lg border border-gray-300">
-            <table class="w-full table-auto">
-                <thead class="bg-gray-200">
+        <!-- Table Container -->
+        <div class="overflow-x-auto max-h-[600px] rounded-lg border border-gray-300">
+            <table class="w-full table-auto text-sm">
+                <thead class="bg-gray-200 text-gray-700">
                     <tr>
                         <th class="p-4 text-left">ID</th>
                         <th class="p-4 text-left">Title</th>
@@ -39,23 +39,31 @@
                         <th class="p-4 text-left">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-300">
                     <?php foreach ($model->search()->getData() as $post) : ?>
-                        <tr class="border-t">
-                            <td class="p-4"><?php echo htmlspecialchars($post->id); ?></td>
-                            <td class="p-4"><?php echo htmlspecialchars($post->title); ?></td>
-                            <td class="p-4 truncate max-w-xs overflow-hidden"><?php echo htmlspecialchars($post->content); ?></td>
-                            <td class="p-4"><?php echo htmlspecialchars($post->tags); ?></td>
-                            <td class="p-4"><?php echo htmlspecialchars($post->status); ?></td>
-                            <td class="p-4"><?php echo date('F d, Y', $post->create_time); ?></td>
+                        <tr>
+                            <td class="p-4"> <?php echo htmlspecialchars($post->id); ?> </td>
+                            <td class="p-4"> <?php echo htmlspecialchars($post->title); ?> </td>
+                            <td class="p-4 max-w-xs truncate"> <?php echo htmlspecialchars($post->content); ?> </td>
+                            <td class="p-4"> <?php echo htmlspecialchars($post->tags); ?> </td>
+                            <td class="p-4"> <?php echo htmlspecialchars($post->status); ?> </td>
+                            <td class="p-4"> <?php echo date('F d, Y', $post->create_time); ?> </td>
                             <td class="p-4 relative">
-                                <button onclick="toggleDropdown(<?php echo $post->id; ?>)" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">Actions</button>
-                                
+                                <button onclick="toggleDropdown(<?php echo $post->id; ?>)" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+                                    &#x22EE;
+                                </button>
+
                                 <!-- Dropdown Menu -->
-                                <div id="dropdown-<?php echo $post->id; ?>" class="hidden absolute bg-white shadow-lg rounded-lg mt-2 z-10">
-                                    <a href="<?php echo Yii::app()->createUrl('post/view', array('id' => $post->id)); ?>" class="block px-4 py-2 hover:bg-gray-100">View</a>
-                                    <a href="<?php echo Yii::app()->createUrl('post/update', array('id' => $post->id)); ?>" class="block px-4 py-2 hover:bg-gray-100">Update</a>
-                                    <a href="<?php echo Yii::app()->createUrl('post/delete', array('id' => $post->id)); ?>" class="block px-4 py-2 hover:bg-gray-100" onclick="return confirm('Are you sure you want to delete this post?');">Delete</a>
+                                <div id="dropdown-<?php echo $post->id; ?>" class="hidden absolute right-0 bg-white shadow-lg rounded-lg mt-2 z-10 w-32">
+                                    <a href="<?php echo Yii::app()->createUrl('post/view', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                                        📄 View
+                                    </a>
+                                    <a href="<?php echo Yii::app()->createUrl('post/update', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                                        ✏️ Update
+                                    </a>
+                                    <a href="<?php echo Yii::app()->createUrl('post/delete', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100" onclick="return confirm('Are you sure you want to delete this post?');">
+                                        ❌ Delete
+                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -68,8 +76,7 @@
     <script>
         // Toggle Search Form
         function toggleSearch() {
-            const searchForm = document.getElementById('search-form');
-            searchForm.classList.toggle('hidden');
+            document.getElementById('search-form').classList.toggle('hidden');
         }
 
         // Toggle Dropdown Menu
@@ -87,4 +94,5 @@
     </script>
 
 </body>
+
 </html>

@@ -66,11 +66,14 @@
 
         <!-- Comment Button -->
         <div class="mt-6">
-            <?php if (Yii::app()->user->isGuest): ?>
-                <a href="<?php echo Yii::app()->createUrl('comment/create', array('post_id' => $model->id)); ?>"
-                    class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Leave a Comment</a>
-            <?php endif; ?>
+        <a href="<?php echo Yii::app()->createUrl('comment/create', array('post_id' => $model->id)); ?>"
+            class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Leave a Comment
+        </a>
         </div>
+
     </div>
+
 </body>
+
 </html>

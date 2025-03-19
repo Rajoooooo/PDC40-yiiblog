@@ -16,10 +16,5 @@ Yii::app()->clientScript->registerCssFile('https://fonts.googleapis.com/css2?fam
                 <?php $this->renderPartial('_form', ['model' => $model]); ?>
             </div>
         </div>
-
-        <!-- <div class="mt-6 text-center">
-            <a href="<?php echo Yii::app()->createUrl('comment/index'); ?>" class="text-blue-600 hover:underline font-medium">&larr; Back to Comments</a>
-        </div> -->
-
     </div>
 </div>

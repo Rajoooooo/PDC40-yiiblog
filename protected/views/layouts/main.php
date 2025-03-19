@@ -20,7 +20,7 @@
             <ul class="flex space-x-8">
                 <?php
                 $menuItems = array(
-                    array('label' => 'Home', 'url' => array('/site/index')),
+                    array('label' => 'Home', 'url' => array('/post/index')),
                     array('label' => 'About', 'url' => array('/site/page', 'view' => 'about')),
                     array('label' => 'Contact', 'url' => array('/site/contact')),
                     array('label' => 'Post', 'url' => array('/post/index'), 'visible' => !Yii::app()->user->isGuest),

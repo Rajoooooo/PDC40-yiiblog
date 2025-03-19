@@ -72,24 +72,26 @@ class CommentController extends Controller
     /**
      * Creates a new comment associated with a post.
      */
-    public function actionCreate()
+    public function actionCreate($post_id = null)
     {
         $model = new Comment();
-
+    
+        // Ensure post_id is set from parameter or query
+        if ($post_id === null) {
+            $post_id = Yii::app()->request->getQuery('id');
+        }
+    
         if (isset($_POST['Comment'])) {
             $model->attributes = $_POST['Comment'];
-
-            if (empty($model->post_id)) {
-                $model->post_id = Yii::app()->request->getQuery('id');
-            }
-
+            $model->post_id = $post_id; // Ensure post_id is set
+    
             if ($model->validate() && $model->save()) {
                 Yii::app()->user->setFlash('success', 'Your comment has been submitted.');
                 $this->redirect(array('post/view', 'id' => $model->post_id));
             }
         }
-
-        $this->render('create', array('model' => $model));
+    
+        $this->render('create', array('model' => $model, 'post_id' => $post_id));
     }
 
     /**
