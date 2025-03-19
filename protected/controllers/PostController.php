@@ -9,8 +9,8 @@ class PostController extends Controller
     public function filters()
     {
         return array(
-            'accessControl', // Controls access permissions
-            'postOnly + delete', // Allows deletion only via POST
+            'accessControl',      // Controls access permissions
+            'postOnly + delete',  // Allows deletion only via POST
         );
     }
 
@@ -43,7 +43,7 @@ class PostController extends Controller
         }
 
         $dataProvider = new CActiveDataProvider('Post', array(
-            'criteria' => $criteria,
+            'criteria'   => $criteria,
             'pagination' => array('pageSize' => 10),
         ));
 
@@ -52,14 +52,25 @@ class PostController extends Controller
         ));
     }
 
-    // Display a single post and its approved comments
+    // Display a single post and handle comments
     public function actionView($id)
     {
-        $model = $this->loadModel($id);
-        $comments = Comment::model()->approvedComments($id);
+        $post = $this->loadModel($id);
+        $comment = new Comment();
+        $comment->post_id = $post->id; // Automatically assign post_id
+
+        if (isset($_POST['Comment'])) {
+            $comment->attributes = $_POST['Comment'];
+            $comment->post_id = $post->id; // Ensure post_id is assigned again
+            if ($comment->save()) {
+                Yii::app()->user->setFlash('commentSubmitted', 'Thank you for your comment. It will be displayed once approved.');
+                $this->refresh();
+            }
+        }
+
         $this->render('view', array(
-            'model' => $model,
-            'comments' => $comments,
+            'model'   => $post,
+            'comment' => $comment,
         ));
     }
 
@@ -71,8 +82,8 @@ class PostController extends Controller
         $this->performAjaxValidation($model);
 
         if (isset($_POST['Post'])) {
-            $model->attributes = $_POST['Post'];
-            $model->author_id = Yii::app()->user->id;
+            $model->attributes  = $_POST['Post'];
+            $model->author_id   = Yii::app()->user->id;
             $model->create_time = time();
             $model->update_time = time();
 
@@ -90,10 +101,11 @@ class PostController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->loadModel($id);
+
         $this->performAjaxValidation($model);
 
         if (isset($_POST['Post'])) {
-            $model->attributes = $_POST['Post'];
+            $model->attributes  = $_POST['Post'];
             $model->update_time = time();
 
             if ($model->save()) {
@@ -154,5 +166,4 @@ class PostController extends Controller
             Yii::app()->end();
         }
     }
-
 }
