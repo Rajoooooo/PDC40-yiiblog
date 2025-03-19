@@ -70,6 +70,9 @@ Yii::app()->clientScript->registerCssFile('https://fonts.googleapis.com/css2?fam
                 </div>
             <?php endif; ?>
 
+            <!-- Hidden Create Time Field -->
+            <?php echo $form->hiddenField($model, 'create_time', ['value' => time()]); ?>
+
             <!-- Submit Button -->
             <div class="text-center mt-8">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Submit Comment' : 'Update Comment', [

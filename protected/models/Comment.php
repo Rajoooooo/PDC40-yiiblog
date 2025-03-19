@@ -90,11 +90,14 @@ class Comment extends CActiveRecord
      */
     public function findRecentComments($limit = 3)
     {
-        return $this->with('post')->findAll(array(
-            'order' => 't.create_time DESC',
+        return self::model()->findAll(array(
+            'condition' => 'status = :status',
+            'params' => array(':status' => self::STATUS_APPROVED),
+            'order' => 'create_time DESC', // Order by newest comments first
             'limit' => $limit,
         ));
     }
+    
 
     /**
      * Retrieves approved comments for a specific post.
@@ -128,4 +131,13 @@ class Comment extends CActiveRecord
 
         return $comment->save();
     }
+
+    protected function beforeSave()
+{
+    if ($this->isNewRecord) {
+        $this->create_time = time();
+    }
+    return parent::beforeSave();
+}
+
 }
