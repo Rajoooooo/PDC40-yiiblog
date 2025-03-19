@@ -32,10 +32,12 @@ class PostController extends Controller
         );
     }
 
-    // Display the list of posts (including tag filtering)
+    // Display the list of posts (excluding archived and unpublished)
     public function actionIndex()
     {
         $criteria = new CDbCriteria();
+        $criteria->addCondition('status = :published');
+        $criteria->params = array(':published' => Post::STATUS_PUBLISHED);
 
         if (isset($_GET['tag'])) {
             $tag = $_GET['tag'];
@@ -52,6 +54,7 @@ class PostController extends Controller
         ));
     }
 
+        
     // Display a single post and handle comments
     public function actionView($id)
 {

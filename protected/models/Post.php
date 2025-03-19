@@ -53,17 +53,18 @@ class Post extends CActiveRecord
         );
     }
 
-    // Used for the admin panel (shows all posts including archived)
-    public function search()
-    {
-        $criteria = new CDbCriteria;
-        $criteria->order = 'create_time DESC'; // Show newest posts first
+    // Used for the admin panel (shows all posts including archived/unpublished)
+public function search()
+{
+    $criteria = new CDbCriteria;
+    $criteria->order = 'create_time DESC';
 
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-        ));
-    }
+    return new CActiveDataProvider($this, array(
+        'criteria' => $criteria,
+    ));
+}
 
+        
     // Used for the index page (excludes archived posts)
     public function searchForIndex()
     {
