@@ -47,7 +47,7 @@ class Tag extends CActiveRecord
     public function relations()
     {
         return array(
-            'posts' => array(self::HAS_MANY, 'Post', 'tags'), // Adjusted to work with existing tags column
+            'posts' => array(self::MANY_MANY, 'Post', 'tbl_post_tag(post_id, tag_id)'),
         );
     }
 
@@ -70,14 +70,14 @@ class Tag extends CActiveRecord
 
     /**
      * Finds the weight of tags for displaying in the tag cloud.
-     * Uses the 'tags' column in the tbl_post table since no separate relation table exists.
+     * Only includes tags from published posts (status = 2).
      * @param int $limit Number of tags to fetch
      * @return array List of tags with weights
      */
     public function findTagWeights($limit = 20)
     {
         $posts = Yii::app()->db->createCommand("
-            SELECT tags FROM tbl_post
+            SELECT tags FROM tbl_post WHERE status = 2
         ")->queryColumn();
 
         $tagCounts = [];
