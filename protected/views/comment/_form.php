@@ -63,11 +63,13 @@ Yii::app()->clientScript->registerCssFile('https://fonts.googleapis.com/css2?fam
                         Comment::STATUS_PENDING => 'Pending',
                         Comment::STATUS_APPROVED => 'Approved',
                     ], [
-                        'prompt' => 'Select Status',
                         'class' => 'w-full p-3 border rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-400 transition',
                     ]); ?>
                     <?php echo $form->error($model, 'status', ['class' => 'text-red-500 text-sm mt-1']); ?>
                 </div>
+            <?php else : ?>
+                <!-- Hidden Status for Guests (Default to Pending) -->
+                <?php echo $form->hiddenField($model, 'status', ['value' => Comment::STATUS_PENDING]); ?>
             <?php endif; ?>
 
             <!-- Hidden Create Time Field -->
