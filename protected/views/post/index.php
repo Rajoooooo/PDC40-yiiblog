@@ -25,7 +25,7 @@ function formatDate($timestamp) {
         <!-- Main Content (Posts) -->
         <div class="w-3/8">
             <h1 class="text-5xl font-extrabold tracking-tight mb-12">Latest Posts</h1>
-            
+
             <?php
             if (isset($_GET['tag'])) {
                 echo "<h2>Posts filtered by tag: <strong>" . CHtml::encode($_GET['tag']) . "</strong></h2>";
@@ -61,16 +61,24 @@ function formatDate($timestamp) {
             </div>
 
             <!-- Pagination -->
-            <div class="mt-12">
+            <div class="flex justify-center mt-12">
                 <?php $this->widget('CLinkPager', array(
                     'pages' => $dataProvider->pagination,
                     'header' => '',
-                    'htmlOptions' => array('class' => 'flex justify-center space-x-3'),
-                    'selectedPageCssClass' => 'bg-blue-600 text-white rounded-lg',
-                    'prevPageLabel' => '← Previous',
-                    'nextPageLabel' => 'Next →',
+                    'htmlOptions' => array('class' => 'flex space-x-2'),
+                    'selectedPageCssClass' => 'px-4 py-2 rounded-lg bg-blue-600 text-white',
+                    'previousPageCssClass' => 'px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400',
+                    'nextPageCssClass' => 'px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400',
+                    'firstPageCssClass' => 'px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400',
+                    'lastPageCssClass' => 'px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400',
+                    'internalPageCssClass' => 'px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300',
+                    'prevPageLabel' => 'Previous',
+                    'nextPageLabel' => 'Next',
+                    'firstPageLabel' => 'First',
+                    'lastPageLabel' => 'Last',
                 )); ?>
             </div>
+
         </div>
 
     </div>
