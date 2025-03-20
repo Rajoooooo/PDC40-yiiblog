@@ -14,7 +14,7 @@
 
 <body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-300">
 
-    <div class="bg-white shadow-xl rounded-2xl p-10 w-full max-w-3xl">
+    <div class="bg-white shadow-xl rounded-2xl p-10 w-full max-w-3xl mx-auto">
 
         <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">Contact Us</h1>
 

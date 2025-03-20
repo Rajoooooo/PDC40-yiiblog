@@ -13,33 +13,33 @@
 
 <div class="container mx-auto" id="page">
 
-    <!-- Header -->
-    <header class="flex justify-between items-center py-6 px-4 bg-white shadow-md">
-        <div id="logo" class="text-2xl font-bold text-gray-800">
-            <?php echo CHtml::encode(Yii::app()->name); ?>
-        </div>
+<header class="flex justify-between items-center py-6 px-4 bg-black shadow-md text-white">
+    <div id="logo" class="text-2xl font-bold">
+        <?php echo CHtml::encode(Yii::app()->name); ?>
+    </div>
 
-        <!-- Navigation -->
-        <nav>
-            <ul class="flex space-x-8">
-                <?php
-                $menuItems = array(
-                    array('label' => 'Home', 'url' => array('/site/index')),
-                    array('label' => 'Post', 'url' => array('/post/index')),
-                    array('label' => 'About', 'url' => array('/site/page', 'view' => 'about')),
-                    array('label' => 'Contact', 'url' => array('/site/contact')), 
-                    array('label' => 'Login', 'url' => array('/site/login'), 'visible' => Yii::app()->user->isGuest),
-                    array('label' => 'Logout (' . Yii::app()->user->name . ')', 'url' => array('/site/logout'), 'visible' => !Yii::app()->user->isGuest),
-                );
+    <!-- Navigation -->
+    <nav>
+        <ul class="flex space-x-8">
+            <?php
+            $menuItems = array(
+                array('label' => 'Home', 'url' => array('/site/index')),
+                array('label' => 'Post', 'url' => array('/post/index')),
+                array('label' => 'About', 'url' => array('/site/page', 'view' => 'about')),
+                array('label' => 'Contact', 'url' => array('/site/contact')), 
+                array('label' => 'Login', 'url' => array('/site/login'), 'visible' => Yii::app()->user->isGuest),
+                array('label' => 'Logout (' . Yii::app()->user->name . ')', 'url' => array('/site/logout'), 'visible' => !Yii::app()->user->isGuest),
+            );
 
-                foreach ($menuItems as $item) {
-                    if (isset($item['visible']) && !$item['visible']) continue;
-                    echo '<li><a href="' . CHtml::normalizeUrl($item['url']) . '" class="text-gray-600 hover:text-blue-500 transition">' . CHtml::encode($item['label']) . '</a></li>';
-                }
-                ?>
-            </ul>
-        </nav>
-    </header>
+            foreach ($menuItems as $item) {
+                if (isset($item['visible']) && !$item['visible']) continue;
+                echo '<li><a href="' . CHtml::normalizeUrl($item['url']) . '" class="text-gray-300 hover:text-blue-400 transition">' . CHtml::encode($item['label']) . '</a></li>';
+            }
+            ?>
+        </ul>
+    </nav>
+</header>
+
 
     <!-- Main Content -->
     <main class="p-8">
