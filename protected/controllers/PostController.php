@@ -22,7 +22,7 @@ class PostController extends Controller
             array('allow', 'actions' => array('index', 'view'), 'users' => array('*')),
 
             // Allow authenticated users to create, update, and manage posts
-            array('allow', 'actions' => array('create', 'update', 'admin'), 'users' => array('@')),
+            array('allow', 'actions' => array('create', 'update', 'admin', 'delete'), 'users' => array('@')),
 
             // Allow only 'admin' user to delete posts
             array('allow', 'actions' => array('delete'), 'users' => array('admin')),

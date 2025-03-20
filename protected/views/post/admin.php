@@ -68,9 +68,15 @@
                                         <a href="<?php echo Yii::app()->createUrl('post/update', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100">
                                             ✏️ Update
                                         </a>
-                                        <a href="<?php echo Yii::app()->createUrl('post/delete', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100" onclick="return confirm('Are you sure you want to delete this post?');">
-                                            ❌ Delete
-                                        </a>
+                                        <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100"
+                                            onclick="if(confirm('Are you sure you want to delete this post?')) { 
+                                                document.getElementById('delete-form-<?php echo $post->id; ?>').submit();
+                                            }">
+                                                ❌ Delete
+                                            </a>
+
+                                            <?php echo CHtml::beginForm(Yii::app()->createUrl('post/delete', array('id' => $post->id)), 'post', array('id' => "delete-form-{$post->id}", 'style' => 'display:none;')); ?>
+                                            <?php echo CHtml::endForm(); ?>
                                     </div>
                                 </td>
                             </tr>
