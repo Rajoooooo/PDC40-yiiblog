@@ -79,34 +79,25 @@ class Tag extends CActiveRecord
         $posts = Yii::app()->db->createCommand("
             SELECT tags FROM tbl_post WHERE status = 2
         ")->queryColumn();
-
+    
         $tagCounts = [];
-
+    
         foreach ($posts as $tags) {
             $tagArray = explode(',', $tags); // Assuming tags are comma-separated in the 'tags' column
             foreach ($tagArray as $tag) {
                 $tag = trim($tag);
                 if ($tag !== '') {
-                    if (!isset($tagCounts[$tag])) {
-                        $tagCounts[$tag] = 1;
-                    } else {
-                        $tagCounts[$tag]++;
-                    }
+                    $tagCounts[$tag] = isset($tagCounts[$tag]) ? $tagCounts[$tag] + 1 : 1;
                 }
             }
         }
-
+    
         arsort($tagCounts); // Sort tags by frequency
-
+    
         // Limit the number of tags
         $tagCounts = array_slice($tagCounts, 0, $limit, true);
-
-        // Adjust weights for better visibility
-        $result = [];
-        foreach ($tagCounts as $tag => $count) {
-            $result[$tag] = $count + 10;
-        }
-
-        return $result;
+    
+        return $tagCounts; // Return the actual counts without modification
     }
+    
 }

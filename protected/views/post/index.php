@@ -7,6 +7,7 @@ $this->breadcrumbs = array('Posts');
 function formatDate($timestamp) {
     return date('F d, Y', $timestamp);
 }
+$dataProvider->criteria->order = 'create_time DESC';
 ?>
 
 <!DOCTYPE html>
