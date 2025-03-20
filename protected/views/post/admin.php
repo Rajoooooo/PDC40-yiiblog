@@ -1,3 +1,9 @@
+<?php
+    $dataProvider = $model->search();
+    $posts = $dataProvider->getData();
+    $pagination = $dataProvider->pagination;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,37 +46,60 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-300">
-                    <?php foreach ($model->search()->getData() as $post) : ?>
-                        <tr>
-                            <td class="p-4"> <?php echo htmlspecialchars($post->id); ?> </td>
-                            <td class="p-4"> <?php echo htmlspecialchars($post->title); ?> </td>
-                            <td class="p-4 max-w-xs truncate"> <?php echo htmlspecialchars($post->content); ?> </td>
-                            <td class="p-4"> <?php echo htmlspecialchars($post->tags); ?> </td>
-                            <td class="p-4"> <?php echo htmlspecialchars($post->status); ?> </td>
-                            <td class="p-4"> <?php echo date('F d, Y', $post->create_time); ?> </td>
-                            <td class="p-4 relative">
-                                <button onclick="toggleDropdown(<?php echo $post->id; ?>)" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
-                                    &#x22EE;
-                                </button>
+                    <?php if (!empty($posts)) : ?>
+                        <?php foreach ($posts as $post) : ?>
+                            <tr>
+                                <td class="p-4"> <?php echo htmlspecialchars($post->id); ?> </td>
+                                <td class="p-4"> <?php echo htmlspecialchars($post->title); ?> </td>
+                                <td class="p-4 max-w-xs truncate"> <?php echo htmlspecialchars($post->content); ?> </td>
+                                <td class="p-4"> <?php echo htmlspecialchars($post->tags); ?> </td>
+                                <td class="p-4"> <?php echo htmlspecialchars($post->status); ?> </td>
+                                <td class="p-4"> <?php echo date('F d, Y', $post->create_time); ?> </td>
+                                <td class="p-4 relative">
+                                    <button onclick="toggleDropdown(<?php echo $post->id; ?>)" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+                                        &#x22EE;
+                                    </button>
 
-                                <!-- Dropdown Menu -->
-                                <div id="dropdown-<?php echo $post->id; ?>" class="hidden absolute right-0 bg-white shadow-lg rounded-lg mt-2 z-10 w-32">
-                                    <a href="<?php echo Yii::app()->createUrl('post/view', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100">
-                                        📄 View
-                                    </a>
-                                    <a href="<?php echo Yii::app()->createUrl('post/update', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100">
-                                        ✏️ Update
-                                    </a>
-                                    <a href="<?php echo Yii::app()->createUrl('post/delete', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100" onclick="return confirm('Are you sure you want to delete this post?');">
-                                        ❌ Delete
-                                    </a>
-                                </div>
-                            </td>
+                                    <!-- Dropdown Menu -->
+                                    <div id="dropdown-<?php echo $post->id; ?>" class="hidden absolute right-0 bg-white shadow-lg rounded-lg mt-2 z-10 w-32">
+                                        <a href="<?php echo Yii::app()->createUrl('post/view', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                                            📄 View
+                                        </a>
+                                        <a href="<?php echo Yii::app()->createUrl('post/update', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                                            ✏️ Update
+                                        </a>
+                                        <a href="<?php echo Yii::app()->createUrl('post/delete', array('id' => $post->id)); ?>" class="flex items-center px-4 py-2 hover:bg-gray-100" onclick="return confirm('Are you sure you want to delete this post?');">
+                                            ❌ Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="7" class="p-4 text-center text-gray-500">No posts found.</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination -->
+        <div class="mt-8 flex justify-center">
+            <?php $this->widget('CLinkPager', array(
+                'pages' => $pagination,
+                'header' => '',
+                'htmlOptions' => array('class' => 'flex space-x-2'),
+                'nextPageLabel' => 'Next',
+                'prevPageLabel' => 'Previous',
+                'firstPageLabel' => 'First',
+                'lastPageLabel' => 'Last',
+                'selectedPageCssClass' => 'bg-indigo-600 text-white px-4 py-2 rounded-lg',
+                'hiddenPageCssClass' => 'hidden',
+                'internalPageCssClass' => 'px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300',
+            )); ?>
+        </div>
+
     </div>
 
     <script>

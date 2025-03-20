@@ -17,6 +17,13 @@
         <!-- Metadata -->
         <div class="text-sm text-gray-600 mb-6">
             <p>Published on: <span class="font-semibold"> <?php echo date('F j, Y', $model->create_time); ?> </span></p>
+
+            <!-- Show Updated Date (If Different from Create Time) -->
+            <?php if ($model->update_time > $model->create_time): ?>
+                <p>Updated on: <span class="font-semibold"> <?php echo date('F j, Y', $model->update_time); ?> </span></p>
+            <?php endif; ?>
+
+            <!-- Author -->
             <p>
                 Author: <span class="font-semibold">
                     <?php
@@ -50,11 +57,12 @@
         <!-- Comment Section -->
         <div class="mt-12">
             <h2 class="text-2xl font-bold mb-4">Comments</h2>
+
             <?php if (!empty($comments)): ?>
                 <div class="space-y-4">
                     <?php foreach ($comments as $comment): ?>
                         <div class="flex items-center mb-4 p-4 bg-gray-100 rounded-lg">
-                            <p class="font-semibold mr-2"> <?php echo CHtml::encode($comment->author); ?>:</p>
+                            <p class="font-semibold mr-2"><?php echo CHtml::encode($comment->author); ?>:</p>
                             <p><?php echo CHtml::encode($comment->content); ?></p>
                         </div>
                     <?php endforeach; ?>
@@ -66,10 +74,10 @@
 
         <!-- Comment Button -->
         <div class="mt-6">
-        <a href="<?php echo Yii::app()->createUrl('comment/create', array('post_id' => $model->id)); ?>"
-            class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Leave a Comment
-        </a>
+            <a href="<?php echo Yii::app()->createUrl('comment/create', array('post_id' => $model->id)); ?>"
+                class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                Leave a Comment
+            </a>
         </div>
 
     </div>
