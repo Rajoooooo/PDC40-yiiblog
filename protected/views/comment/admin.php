@@ -89,9 +89,12 @@ $dataProvider->pagination = array('pageSize' => 10);
                                 <a href="<?php echo Yii::app()->createUrl('comment/update', array('id' => $data->id)); ?>" class="text-green-500 hover:underline" title="Update">
                                     Update
                                 </a>
-                                <a href="<?php echo Yii::app()->createUrl('comment/delete', array('id' => $data->id)); ?>" class="text-red-500 hover:underline" title="Delete" onclick="return confirm('Are you sure?');">
-                                    Delete
-                                </a>
+                                <?php echo CHtml::form(array('comment/delete', 'id' => $data->id), 'post', array('style' => 'display:inline;')); ?>
+                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this comment?');" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                <?php echo CHtml::endForm(); ?>
+
                             </td>
                         </tr>
                     <?php endforeach; ?>

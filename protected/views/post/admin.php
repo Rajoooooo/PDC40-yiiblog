@@ -22,7 +22,7 @@
         <!-- Navigation Buttons -->
         <div class="mb-8 flex flex-wrap gap-4">
             <a href="<?php echo Yii::app()->createUrl('post/index'); ?>" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">List Posts</a>
-            <a href="<?php echo Yii::app()->createUrl('post/create'); ?>" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">Create Post</a>
+            <!-- <a href="<?php echo Yii::app()->createUrl('post/create'); ?>" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">Create Post</a> -->
             <button class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700" onclick="toggleSearch()">Advanced Search</button>
         </div>
 
