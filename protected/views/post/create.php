@@ -4,6 +4,11 @@
 
 Yii::app()->clientScript->registerCssFile('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
 Yii::app()->clientScript->registerCssFile('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+// Set create_time automatically
+if ($model->isNewRecord) {
+    $model->create_time = date('Y-m-d H:i:s');
+}
 ?>
 
 <div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-300">
@@ -57,21 +62,17 @@ Yii::app()->clientScript->registerCssFile('https://fonts.googleapis.com/css2?fam
 
                     <div>
                         <?php echo $form->labelEx($model, 'status', array('class' => 'block text-gray-700 font-semibold mb-2')); ?>
-                        <?php echo $form->textField($model, 'status', array(
-                            'placeholder' => 'Status (e.g., 1 for Published)',
+                        <?php echo $form->dropDownList($model, 'status', array(
+                            '1' => 'Unpublished',
+                            '2' => 'Published',
+                            '3' => 'Archived'
+                        ), array(
                             'class' => 'w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all',
                         )); ?>
                         <?php echo $form->error($model, 'status', array('class' => 'text-red-500 text-sm mt-2')); ?>
                     </div>
 
-                    <div>
-                        <?php echo $form->labelEx($model, 'create_time', array('class' => 'block text-gray-700 font-semibold mb-2')); ?>
-                        <?php echo $form->textField($model, 'create_time', array(
-                            'placeholder' => 'YYYY-MM-DD HH:MM:SS',
-                            'class' => 'w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all',
-                        )); ?>
-                        <?php echo $form->error($model, 'create_time', array('class' => 'text-red-500 text-sm mt-2')); ?>
-                    </div>
+                    <?php echo $form->hiddenField($model, 'create_time'); ?>
 
                     <div>
                         <?php echo $form->labelEx($model, 'author_id', array('class' => 'block text-gray-700 font-semibold mb-2')); ?>
