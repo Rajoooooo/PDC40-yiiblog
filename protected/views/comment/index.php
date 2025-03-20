@@ -13,10 +13,18 @@
     );
 */
 
-// Fetch comments from the database in newest-to-oldest order
+// Fetch comments with pagination
 $criteria = new CDbCriteria();
-$criteria->order = 'create_time DESC'; // Newest comment first
+$criteria->order = 'create_time DESC'; 
+
+// Set up pagination (10 comments per page)
+$pages = new CPagination(Comment::model()->count($criteria));
+$pages->pageSize = 10;
+$pages->applyLimit($criteria);
+
+// Retrieve paginated comments
 $comments = Comment::model()->findAll($criteria);
+
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +78,27 @@ $comments = Comment::model()->findAll($criteria);
             <?php endif; ?>
 
         </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-12">
+            <?php $this->widget('CLinkPager', array(
+                'pages' => $pages,
+                'header' => '',
+                'htmlOptions' => array('class' => 'flex space-x-2'),
+                'selectedPageCssClass' => 'bg-blue-600 text-white',
+                'previousPageCssClass' => 'px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400',
+                'nextPageCssClass' => 'px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400',
+                'firstPageCssClass' => 'px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400',
+                'lastPageCssClass' => 'px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400',
+                'selectedPageCssClass' => 'px-4 py-2 rounded-lg bg-blue-600 text-white',
+                'internalPageCssClass' => 'px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300',
+                'prevPageLabel' => 'Previous',
+                'nextPageLabel' => 'Next',
+                'firstPageLabel' => 'First',
+                'lastPageLabel' => 'Last',
+            )); ?>
+        </div>
+
     </div>
 
 </body>
