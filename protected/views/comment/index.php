@@ -43,7 +43,7 @@ $comments = Comment::model()->findAll($criteria);
 
         <!-- Navigation Links -->
         <div class="flex space-x-4 mb-8">
-            <a href="<?php echo Yii::app()->createUrl('comment/create'); ?>" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">Create Comment</a>
+            <!-- <a href="<?php echo Yii::app()->createUrl('comment/create'); ?>" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">Create Comment</a> -->
             <a href="<?php echo Yii::app()->createUrl('comment/admin'); ?>" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Manage Comment</a>
         </div>
 

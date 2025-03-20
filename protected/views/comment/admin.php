@@ -7,10 +7,10 @@ $this->breadcrumbs = array(
     'Manage',
 );
 
-$this->menu = array(
-    array('label' => 'List Comment', 'url' => array('index')),
-    array('label' => 'Create Comment', 'url' => array('create')),
-);
+// $this->menu = array(
+//     array('label' => 'List Comment', 'url' => array('index')),
+//     array('label' => 'Create Comment', 'url' => array('create')),
+// );
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
@@ -24,6 +24,10 @@ $('.search-form form').submit(function(){
     return false;
 });
 ");
+
+// Pagination: Limit to 10 comments per page
+$dataProvider = $model->search();
+$dataProvider->pagination = array('pageSize' => 10);
 ?>
 
 <!DOCTYPE html>
@@ -61,7 +65,7 @@ $('.search-form form').submit(function(){
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($model->search()->getData() as $data): ?>
+                    <?php foreach ($dataProvider->getData() as $data): ?>
                         <tr class="border-t">
                             <td class="p-4"><?php echo $data->id; ?></td>
                             <td class="p-4 max-w-xs truncate" title="<?php echo CHtml::encode($data->content); ?>">
@@ -78,9 +82,16 @@ $('.search-form form').submit(function(){
                                     'onchange' => "updateStatus({$data->id}, this.value)",
                                 )); ?>
                             </td>
-                            <td class="p-4">
-                                <a href="<?php echo Yii::app()->createUrl('comment/view', array('id' => $data->id)); ?>" class="text-blue-500 hover:underline">View</a>
-                                <a href="<?php echo Yii::app()->createUrl('comment/delete', array('id' => $data->id)); ?>" class="text-red-500 hover:underline ml-4" onclick="return confirm('Are you sure?');">Delete</a>
+                            <td class="p-4 flex space-x-4">
+                                <a href="<?php echo Yii::app()->createUrl('comment/view', array('id' => $data->id)); ?>" class="text-blue-500 hover:underline" title="View">
+                                    View
+                                </a>
+                                <a href="<?php echo Yii::app()->createUrl('comment/update', array('id' => $data->id)); ?>" class="text-green-500 hover:underline" title="Update">
+                                    Update
+                                </a>
+                                <a href="<?php echo Yii::app()->createUrl('comment/delete', array('id' => $data->id)); ?>" class="text-red-500 hover:underline" title="Delete" onclick="return confirm('Are you sure?');">
+                                    Delete
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -88,32 +99,12 @@ $('.search-form form').submit(function(){
             </table>
         </div>
 
+        <!-- Pagination -->
+        <div class="mt-8">
+            <?php $this->widget('CLinkPager', array('pages' => $dataProvider->pagination)); ?>
+        </div>
+
     </div>
-
-    <!-- <script>
-        function updateStatus(id, status) {
-            // Prevent updating if 'Rejected' is selected
-            if (status === 'Rejected') {
-                return;
-            }
-
-            fetch("<?php echo Yii::app()->createUrl('comment/updateStatus'); ?>", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    id: id,
-                    status: status
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('Status updated successfully');
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    </script> -->
 
 </body>
 </html>

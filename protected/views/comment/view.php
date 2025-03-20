@@ -32,8 +32,8 @@ $manageUrl = Yii::app()->createUrl('comment/admin');
 
         <!-- Menu Buttons -->
         <div class="flex space-x-4 mb-8">
-            <a href="<?php echo $listUrl; ?>" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">List Comment</a>
-            <a href="<?php echo $createUrl; ?>" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">Create Comment</a>
+            <!-- <a href="<?php echo $listUrl; ?>" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">List Comment</a> -->
+            <!-- <a href="<?php echo $createUrl; ?>" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">Create Comment</a> -->
             <a href="<?php echo $updateUrl; ?>" class="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">Update Comment</a>
             <form method="post" action="<?php echo $deleteUrl; ?>" onsubmit="return confirm('Are you sure you want to delete this item?');">
                 <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700">Delete Comment</button>
